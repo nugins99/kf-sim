@@ -1,4 +1,6 @@
 #include <Eigen/Dense>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 #include <iomanip>
 #include <ios>
 #include <iostream>
@@ -12,17 +14,39 @@
 #include "SensorPreprocessor.h"
 #include "VehicleTruthModelFactory.h"
 
-int main()
+boost::property_tree::ptree readTreeFromFile(const std::string& filename)
 {
+    boost::property_tree::ptree pt;
+    try
+    {
+        boost::property_tree::ini_parser::read_ini(filename, pt);
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error reading config: " << e.what() << std::endl;
+        throw;
+    }
+    return pt;
+}
+
+int main(int argc, char* argv[])
+{
+    std::string config_path = "../../config/truth_model.cfg";
+    if (argc > 1)
+    {
+        config_path = argv[1];
+    }
+    auto pt = readTreeFromFile(config_path);
+
+    double dt = pt.get<double>("sim.dt", 0.1);    // fallback to 0.1
+    int steps = pt.get<int>("sim.steps", 60000);  // fallback to 60000
+
     constexpr int DOF = 6;  // [x, y, z, vx, vy, vz]
     using StateVec = Eigen::Matrix<double, DOF, 1>;
     using StateMat = Eigen::Matrix<double, DOF, DOF>;
 
-    double dt = 0.1;  // 100ms time step
-    int steps = 60000;
-
-    // Create truth model (change scenario as needed)
-    std::unique_ptr<VehicleTruthModel> truth = createVehicleTruthModel("circle");
+    // Create truth model from ptree
+    std::unique_ptr<VehicleTruthModel> truth = createVehicleTruthModelFromConfig(pt);
 
     // Initial state: match truth
     Eigen::Vector3d true_pos = truth->getPosition();
@@ -37,8 +61,8 @@ int main()
     KalmanFilter<DOF> kf(dt, Q, R);
     kf.init(initial_state, initial_cov);
 
-    // Create sensors
-    SensorPreprocessor preprocessor(0.01, 0.001, 1.0);
+    // Create sensors from config
+    SensorPreprocessor preprocessor(pt);
     preprocessor.initialize(true_vel);
 
     auto file_output = std::make_shared<FileOutput>("output.txt");

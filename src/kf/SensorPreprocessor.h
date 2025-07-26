@@ -1,5 +1,7 @@
 #pragma once
 #include <Eigen/Dense>
+#include <boost/property_tree/ptree.hpp>
+
 #include "IMUSensor6D.h"
 #include "PositionDepthSensor.h"
 #include "VehicleTruthModel.h"
@@ -11,8 +13,9 @@
  * Handles simulation and preprocessing of IMU and position sensor data,
  * integrates velocity estimates, and provides measurement vectors for filtering.
  */
-class SensorPreprocessor {
-public:
+class SensorPreprocessor
+{
+   public:
     using StateVec = Eigen::Matrix<double, 6, 1>;
 
     /**
@@ -22,6 +25,12 @@ public:
      * @param pos_noise Standard deviation of position sensor noise.
      */
     SensorPreprocessor(double imu_accel_noise, double imu_gyro_noise, double pos_noise);
+
+    /**
+     * @brief Constructor from property tree
+     * @param pt boost::property_tree::ptree object for config
+     */
+    SensorPreprocessor(const boost::property_tree::ptree& pt);
 
     /**
      * @brief Initializes the preprocessor with an initial velocity.
@@ -51,8 +60,8 @@ public:
      */
     const Eigen::Vector3d& getIntegratedVel() const;
 
-private:
-    IMUSensor6D imu_; ///< IMU sensor simulation object
-    PositionDepthSensor position_; ///< Position and depth sensor simulation object
-    Eigen::Vector3d integrated_vel_; ///< Integrated velocity vector
+   private:
+    IMUSensor6D imu_;                 ///< IMU sensor simulation object
+    PositionDepthSensor position_;    ///< Position and depth sensor simulation object
+    Eigen::Vector3d integrated_vel_;  ///< Integrated velocity vector
 };

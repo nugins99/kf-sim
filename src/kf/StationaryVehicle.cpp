@@ -1,7 +1,8 @@
 #include "StationaryVehicle.h"
 
 StationaryVehicle::StationaryVehicle(const Eigen::Vector3d& pos, const Eigen::Vector3d& orient)
-    : pos_(pos), orient_(orient) {}
+    : pos_(pos), orient_(orient)
+{}
 
 void StationaryVehicle::step(double /*dt*/) {}
 

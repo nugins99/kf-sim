@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+
 #include "VehicleTruthModel.h"
 
 /**
@@ -9,7 +10,7 @@ class CircleVehicle : public VehicleTruthModel
 {
    public:
     CircleVehicle(double radius, double speed, double depth,
-              const Eigen::Vector3d& center = Eigen::Vector3d::Zero());
+                  const Eigen::Vector3d& center = Eigen::Vector3d::Zero());
     void step(double dt) override;
     Eigen::Vector3d getPosition() const override;
     Eigen::Vector3d getVelocity() const override;

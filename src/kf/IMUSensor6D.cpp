@@ -1,4 +1,5 @@
 #include "IMUSensor6D.h"
+
 #include <cmath>
 
 IMUSensor6D::IMUSensor6D(double accel_noise_std, double gyro_noise_std)

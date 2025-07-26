@@ -1,8 +1,11 @@
 #include "CircleVehicle.h"
+
 #include <cmath>
 
-CircleVehicle::CircleVehicle(double radius, double speed, double depth, const Eigen::Vector3d& center)
-    : r_(radius), v_(speed), theta_(0.0), depth_(depth), center_(center) {}
+CircleVehicle::CircleVehicle(double radius, double speed, double depth,
+                             const Eigen::Vector3d& center)
+    : r_(radius), v_(speed), theta_(0.0), depth_(depth), center_(center)
+{}
 
 void CircleVehicle::step(double dt)
 {

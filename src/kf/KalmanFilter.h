@@ -82,11 +82,11 @@ class KalmanFilter
     StateMat getCovariance() const { return P_; }
 
    private:
-    double dt_; ///< Time step
-    StateVec x_; ///< State vector
-    StateMat P_; ///< State covariance
-    StateMat Q_; ///< Process noise covariance
-    StateMat R_; ///< Measurement noise covariance
-    StateMat F_; ///< State transition matrix
-    StateMat H_; ///< Measurement matrix
+    double dt_;   ///< Time step
+    StateVec x_;  ///< State vector
+    StateMat P_;  ///< State covariance
+    StateMat Q_;  ///< Process noise covariance
+    StateMat R_;  ///< Measurement noise covariance
+    StateMat F_;  ///< State transition matrix
+    StateMat H_;  ///< Measurement matrix
 };

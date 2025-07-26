@@ -5,8 +5,9 @@
 /**
  * @brief Abstract interface for simulation output reporting.
  */
-class OutputInterface {
-public:
+class OutputInterface
+{
+   public:
     virtual ~OutputInterface() = default;
     /**
      * @brief Report a single simulation step.
@@ -21,14 +22,8 @@ public:
      * @param measurement Measurement vector.
      * @param position_error Position error.
      */
-    virtual void report(int step,
-                       const Eigen::Vector3d& tpos,
-                       const Eigen::Vector3d& tvel,
-                       double tspeed,
-                       double theading,
-                       const Eigen::Matrix<double, 6, 1>& est,
-                       double espeed,
-                       double eheading,
-                       const Eigen::Vector3d& measurement,
-                       double position_error) = 0;
+    virtual void report(int step, const Eigen::Vector3d& tpos, const Eigen::Vector3d& tvel,
+                        double tspeed, double theading, const Eigen::Matrix<double, 6, 1>& est,
+                        double espeed, double eheading, const Eigen::Vector3d& measurement,
+                        double position_error) = 0;
 };
