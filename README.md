@@ -28,16 +28,26 @@ KF-Sim is a simulation project for Kalman Filter-based vehicle tracking and esti
 - Executables are located in `build/bin/` after building.
 - To run the main simulation:
   ```sh
-  ./build/bin/<executable_name>
+  ./build/bin/kf-sim
   ```
-  Replace `<executable_name>` with the actual binary name (e.g., `kf_sim`).
+
+## Viewing Outputs 
+Running the simulation generates an "output.txt".
+
+```
+    cd build/bin
+    ../../scripts/plot
+```
+**Example**
+![alt text](data/plot.svg)
 
 ## Testing
 - To run unit tests:
   ```sh
   ctest --test-dir build
   ```
+  *NOTE* Tests have not been written yet.
 
 ## Notes
 - For custom build presets, see `CMakePresets.json`.
-- For more details, refer to the source code in `src/` and `build/` folders.
+- For more details, refer to the source code in `src/` folder.
