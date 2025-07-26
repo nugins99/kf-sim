@@ -11,7 +11,13 @@ SensorPreprocessor::SensorPreprocessor(double imu_accel_noise, double imu_gyro_n
 
 SensorPreprocessor::SensorPreprocessor(const boost::property_tree::ptree& pt)
     : m_imu(pt.get<double>("sensor.imu_accel_noise", 0.01),
-            pt.get<double>("sensor.imu_gyro_noise", 0.001)),
+            pt.get<double>("sensor.imu_gyro_noise", 0.001),
+            Eigen::Vector3d(pt.get<double>("sensor.imu_accel_bias_x", 0.0),
+                           pt.get<double>("sensor.imu_accel_bias_y", 0.0),
+                           pt.get<double>("sensor.imu_accel_bias_z", 0.0)),
+            Eigen::Vector3d(pt.get<double>("sensor.imu_gyro_bias_x", 0.0),
+                           pt.get<double>("sensor.imu_gyro_bias_y", 0.0),
+                           pt.get<double>("sensor.imu_gyro_bias_z", 0.0))),
       m_position(pt),
       m_integratedVel(Eigen::Vector3d::Zero())
 {}

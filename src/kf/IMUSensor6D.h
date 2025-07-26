@@ -10,7 +10,28 @@
 class IMUSensor6D
 {
    public:
+    /**
+     * @brief Constructor
+     * @param accel_noise_std Standard deviation of simulated accelerometer noise (ax, ay, az).
+     *        Higher values increase the randomness in the acceleration measurements.
+     * @param gyro_noise_std Standard deviation of simulated gyroscope noise (wx, wy, wz).
+     *        Higher values increase the randomness in the angular velocity measurements.
+     *
+     * These parameters control the amount of Gaussian noise added to the true acceleration and angular velocity
+     * values reported by the sensor. This simulates real-world sensor imperfections and uncertainty.
+     */
     IMUSensor6D(double accel_noise_std, double gyro_noise_std);
+
+    /**
+     * @brief Constructor with bias
+     * @param accel_noise_std Standard deviation of simulated accelerometer noise (ax, ay, az).
+     * @param gyro_noise_std Standard deviation of simulated gyroscope noise (wx, wy, wz).
+     * @param accel_bias 3D bias vector added to acceleration measurements.
+     * @param gyro_bias 3D bias vector added to angular velocity measurements.
+     */
+    IMUSensor6D(double accel_noise_std, double gyro_noise_std,
+               const Eigen::Vector3d& accel_bias,
+               const Eigen::Vector3d& gyro_bias);
 
     /**
      * @brief Simulate a measurement from the IMU using the truth model.
@@ -29,4 +50,6 @@ class IMUSensor6D
     std::normal_distribution<double> gyro_noise_;
     Eigen::Vector3d prev_vel_;
     bool prev_vel_set_;
+    Eigen::Vector3d m_accelBias = Eigen::Vector3d::Zero();
+    Eigen::Vector3d m_gyroBias = Eigen::Vector3d::Zero();
 };
