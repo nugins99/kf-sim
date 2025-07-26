@@ -4,31 +4,32 @@
 
 CircleVehicle::CircleVehicle(double radius, double speed, double depth,
                              const Eigen::Vector3d& center)
-    : r_(radius), v_(speed), theta_(0.0), depth_(depth), center_(center)
+    : m_radius(radius), m_speed(speed), m_theta(0.0), m_depth(depth), m_center(center)
 {}
 
 void CircleVehicle::step(double dt)
 {
-    theta_ += v_ * dt / r_;
-    if (theta_ > 2 * M_PI) theta_ -= 2 * M_PI;
+    m_theta += m_speed * dt / m_radius;
+    if (m_theta > 2 * M_PI) m_theta -= 2 * M_PI;
 }
 
 Eigen::Vector3d CircleVehicle::getPosition() const
 {
-    return center_ + Eigen::Vector3d(r_ * std::cos(theta_), r_ * std::sin(theta_), depth_);
+    return m_center +
+           Eigen::Vector3d(m_radius * std::cos(m_theta), m_radius * std::sin(m_theta), m_depth);
 }
 
 Eigen::Vector3d CircleVehicle::getVelocity() const
 {
-    return Eigen::Vector3d(-v_ * std::sin(theta_), v_ * std::cos(theta_), 0.0);
+    return Eigen::Vector3d(-m_speed * std::sin(m_theta), m_speed * std::cos(m_theta), 0.0);
 }
 
 Eigen::Vector3d CircleVehicle::getOrientation() const
 {
-    return Eigen::Vector3d(0.0, 0.0, theta_);  // roll, pitch, yaw
+    return Eigen::Vector3d(0.0, 0.0, m_theta);  // roll, pitch, yaw
 }
 
 Eigen::Vector3d CircleVehicle::getAngularVelocity() const
 {
-    return Eigen::Vector3d(0.0, 0.0, v_ / r_);
+    return Eigen::Vector3d(0.0, 0.0, m_speed / m_radius);
 }

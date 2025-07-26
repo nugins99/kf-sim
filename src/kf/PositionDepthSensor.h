@@ -38,10 +38,10 @@ class PositionDepthSensor
     Eigen::Vector3d measure(const VehicleTruthModel* truth);
 
    private:
-    std::random_device rd_;
-    std::default_random_engine gen_;
-    std::normal_distribution<double> pos_noise_;
-    Eigen::Vector3d drift_ = Eigen::Vector3d::Zero();  ///< Drift vector for position measurements
-    Eigen::Vector3d drift_rate_ =
+    std::random_device m_rd;
+    std::default_random_engine m_gen;
+    std::normal_distribution<double> m_posNoise;
+    Eigen::Vector3d m_drift = Eigen::Vector3d::Zero();  ///< Drift vector for position measurements
+    Eigen::Vector3d m_driftRate =
         Eigen::Vector3d::Zero();  ///< Drift rate for position measurements
 };

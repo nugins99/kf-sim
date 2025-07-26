@@ -18,6 +18,6 @@ class CircleVehicle : public VehicleTruthModel
     Eigen::Vector3d getAngularVelocity() const override;
 
    private:
-    double r_, v_, theta_, depth_;
-    Eigen::Vector3d center_;
+    double m_radius, m_speed, m_theta, m_depth;
+    Eigen::Vector3d m_center;
 };

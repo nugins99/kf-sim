@@ -61,7 +61,7 @@ class SensorPreprocessor
     const Eigen::Vector3d& getIntegratedVel() const;
 
    private:
-    IMUSensor6D imu_;                 ///< IMU sensor simulation object
-    PositionDepthSensor position_;    ///< Position and depth sensor simulation object
-    Eigen::Vector3d integrated_vel_;  ///< Integrated velocity vector
+    IMUSensor6D m_imu;                ///< IMU sensor simulation object
+    PositionDepthSensor m_position;   ///< Position and depth sensor simulation object
+    Eigen::Vector3d m_integratedVel;  ///< Integrated velocity vector
 };

@@ -18,6 +18,6 @@ class StationaryVehicle : public VehicleTruthModel
     Eigen::Vector3d getAngularVelocity() const override;
 
    private:
-    Eigen::Vector3d pos_;
-    Eigen::Vector3d orient_;
+    Eigen::Vector3d m_pos;
+    Eigen::Vector3d m_orient;
 };

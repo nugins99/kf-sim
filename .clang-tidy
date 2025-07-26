@@ -1,0 +1,9 @@
+Checks: '-*,readability-identifier-naming'
+
+CheckOptions:
+  - key:             readability-identifier-naming.VariableCase
+    value:           camelCase
+  - key:             readability-identifier-naming.MemberVariableCase
+    value:           camelCase
+  - key:             readability-identifier-naming.MemberVariablePrefix
+    value:           m_

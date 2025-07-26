@@ -18,6 +18,9 @@ release-install: release
 
 all: debug release
 
+reformat:
+	clang-format -i $$(find src -name "*.h" -o -name "*.cpp") 
+
 clean:
 	rm -rf build
 	
