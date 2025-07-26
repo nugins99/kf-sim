@@ -1,0 +1,50 @@
+#!/usr/bin/env gnuplot
+
+set multiplot layout 3,2 title "Kalman Filter Simulation"
+
+# True vs Estimated Position (x, y)
+set title "True vs Estimated Position (XY)"
+set xlabel "X (ft)"
+set ylabel "Y (ft)"
+plot \
+    "output.txt" using 2:3 with lines title "True Position", \
+    "output.txt" using 10:11 with lines title "Estimated Position"
+
+# True vs Estimated Depth (Z)
+set title "True vs Estimated Depth"
+set xlabel "Step"
+set ylabel "Depth (ft)"
+plot \
+    "output.txt" using 1:4 with lines title "True Depth", \
+    "output.txt" using 1:12 with lines title "Estimated Depth"
+
+# True vs Estimated Speed over time
+set title "True vs Estimated Speed"
+set xlabel "Step"
+set ylabel "Speed (ft/s)"
+plot \
+    "output.txt" using 1:8 with lines title "True Speed", \
+    "output.txt" using 1:16 with lines title "Estimated Speed"
+
+# True vs Estimated Heading over time
+set title "True vs Estimated Heading"
+set xlabel "Step"
+set ylabel "Heading"
+plot \
+    "output.txt" using 1:9 with lines title "True Heading", \
+    "output.txt" using 1:17 with lines title "Estimated Heading"
+
+# Range Measurements (only when measured)
+set title "Range Measurements"
+set xlabel "Step"
+set ylabel "Range (ft)"
+plot "output.txt" using 1:17:(($21==1)?$17:1/0) with points title "Range (measured)"
+
+# Position Error over time
+set title "Position Error Over Time"
+set xlabel "Step"
+set ylabel "Error (ft)"
+plot "output.txt" using 1:21 with lines title "Position Error"
+
+unset multiplot
+pause -1
