@@ -1,13 +1,15 @@
 #pragma once
 #include <Eigen/Dense>
 
+#include "KalmanFilterInterface.h"
+
 /**
  * @brief Templated Kalman Filter class for configurable DOF (dimensions of state).
  *
  * @tparam DOF Number of state dimensions (e.g., 4 for 2D position and velocity).
  */
 template <int DOF>
-class KalmanFilter
+class KalmanFilter : public KalmanFilterInterface<DOF>
 {
    public:
     /**
@@ -26,7 +28,7 @@ class KalmanFilter
      * @param measurement_noise Measurement noise covariance matrix (DOF x DOF).
      */
     KalmanFilter(double dt, const StateMat& process_noise, const StateMat& measurement_noise)
-        : dt_(dt), Q_(process_noise), R_(measurement_noise)
+        : KalmanFilterInterface<DOF>(), dt_(dt), Q_(process_noise), R_(measurement_noise)
     {
         F_ = StateMat::Identity();
         // For position-velocity model, set F(i, i+DOF/2) = dt
