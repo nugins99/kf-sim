@@ -1,5 +1,6 @@
 #pragma once
 #include <iomanip>
+#include <ios>
 #include <iostream>
 
 #include "OutputInterface.h"
@@ -10,24 +11,22 @@
 class ProgressReporter : public OutputInterface
 {
    public:
-    ProgressReporter(int interval = 1000) : interval_(interval) {}
-    void report(int step, const Eigen::Vector3d& tpos, [[maybe_unused]] const Eigen::Vector3d& tvel,
-                [[maybe_unused]] double tspeed, [[maybe_unused]] double theading,
-                const Eigen::Matrix<double, 6, 1>& est, [[maybe_unused]] double espeed,
-                [[maybe_unused]] double eheading, const Eigen::Vector3d& measurement,
-                double position_error) override
+    /**
+     * @brief Constructor
+     * @param steps Total number of simulation steps for progress reporting.
+     */
+    explicit ProgressReporter(int steps) : m_totalSteps(steps) {}
+
+    void report(int step, const StateVec& truth_state, const StateVec& kf_state,
+                [[maybe_unused]] const StateMat& kf_cov) override
     {
-        if (step % interval_ == 0)
-        {
-            std::cerr << std::setprecision(3) << std::fixed;
-            std::cerr << "# Step " << step << ": "
-                      << "True Position: " << tpos.transpose() << ", "
-                      << "Estimated Position: " << est.head<3>().transpose() << ", "
-                      << "Position Error: " << position_error << ", "
-                      << "Integrated Velocity: " << measurement.transpose() << std::endl;
-        }
+        // Simple progress output: print step and position error
+        double position_error = (truth_state.head<3>() - kf_state.head<3>()).norm();
+        auto progress = (static_cast<float>(step) / m_totalSteps) * 100;
+        std::cout << std::fixed << std::setprecision(1) << std::setw(4) << progress << "% "
+                  << " Position Error: " << std::setw(6) << position_error << std::endl;
     }
 
    private:
-    int interval_;
+    int m_totalSteps;  ///< Total number of simulation steps for progress reporting
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include "Types.h"  // Include Types.h for StateVec and StateMat definitions
 /**
  * @brief Interface for Kalman Filter classes.
  *
@@ -13,14 +14,6 @@ template <int DOF>
 class KalmanFilterInterface
 {
    public:
-    /**
-     * @brief State vector type (DOF x 1).
-     */
-    using StateVec = Eigen::Matrix<double, DOF, 1>;
-    /**
-     * @brief State matrix type (DOF x DOF).
-     */
-    using StateMat = Eigen::Matrix<double, DOF, DOF>;
     virtual ~KalmanFilterInterface() = default;
     /**
      * @brief Initialize filter state and covariance.

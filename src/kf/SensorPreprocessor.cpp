@@ -27,7 +27,7 @@ void SensorPreprocessor::initialize(const Eigen::Vector3d& initial_vel)
     m_integratedVel = initial_vel;
 }
 
-SensorPreprocessor::StateVec SensorPreprocessor::getMeasurement(VehicleTruthModel* truth, double dt,
+StateVec SensorPreprocessor::getMeasurement(VehicleTruthModel* truth, double dt,
                                                                 int step, const StateVec& kf_est)
 {
     // Simulate IMU measurement
@@ -36,6 +36,10 @@ SensorPreprocessor::StateVec SensorPreprocessor::getMeasurement(VehicleTruthMode
     if (step == 0)
     {
         m_integratedVel = truth->getVelocity();
+    }
+    else
+    {
+        updateState(kf_est);
     }
     m_integratedVel += accel * dt;
 
@@ -57,7 +61,7 @@ SensorPreprocessor::StateVec SensorPreprocessor::getMeasurement(VehicleTruthMode
     return measurement;
 }
 
-void SensorPreprocessor::updateIntegratedVel(const StateVec& kf_state)
+void SensorPreprocessor::updateState(const StateVec& kf_state)
 {
     m_integratedVel = kf_state.segment<3>(3);
 }

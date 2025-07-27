@@ -5,6 +5,7 @@
 #include "IMUSensor6D.h"
 #include "PositionDepthSensor.h"
 #include "VehicleTruthModel.h"
+#include <Types.h>  // Include the Types header for DOF, StateVec, StateMat
 
 /**
  * @class SensorPreprocessor
@@ -16,7 +17,6 @@
 class SensorPreprocessor
 {
    public:
-    using StateVec = Eigen::Matrix<double, 6, 1>;
 
     /**
      * @brief Constructor
@@ -52,7 +52,7 @@ class SensorPreprocessor
      * @brief Updates the internally integrated velocity using the current filter state.
      * @param kf_state Current Kalman Filter state vector.
      */
-    void updateIntegratedVel(const StateVec& kf_state);
+    void updateState(const StateVec& kf_state);
 
     /**
      * @brief Returns the current integrated velocity vector.

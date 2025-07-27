@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "KalmanFilterInterface.h"
+#include "Types.h"
 
 /**
  * @brief Extended Kalman Filter (EKF) class for nonlinear models.
@@ -28,15 +29,6 @@ template <int DOF>
 class ExtendedKalmanFilter : public KalmanFilterInterface<DOF>
 {
    public:
-    /**
-     * @brief State vector type (DOF x 1).
-     */
-    using StateVec = typename KalmanFilterInterface<DOF>::StateVec;
-    /**
-     * @brief State matrix type (DOF x DOF).
-     */
-    using StateMat = typename KalmanFilterInterface<DOF>::StateMat;
-
     /**
      * @brief Nonlinear state transition function type.
      * @param x Current state vector.

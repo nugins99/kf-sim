@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 
 #include "KalmanFilterInterface.h"
+#include "Types.h"  // Include the Types header for DOF, StateVec, StateMat
 
 /**
  * @brief Templated Kalman Filter class for configurable DOF (dimensions of state).
@@ -12,15 +13,7 @@ template <int DOF>
 class KalmanFilter : public KalmanFilterInterface<DOF>
 {
    public:
-    /**
-     * @brief State vector type (DOF x 1).
-     */
-    using StateVec = Eigen::Matrix<double, DOF, 1>;
-    /**
-     * @brief State matrix type (DOF x DOF).
-     */
-    using StateMat = Eigen::Matrix<double, DOF, DOF>;
-
+    
     /**
      * @brief Constructor for KalmanFilter.
      * @param dt Time step (seconds).

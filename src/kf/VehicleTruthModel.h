@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <memory>
+#include <Types.h>
 
 /**
  * @brief Interface for vehicle truth motion models (6DOF).
@@ -16,10 +17,27 @@ class VehicleTruthModel
      */
     virtual void step(double dt) = 0;
 
-    std::pair<Eigen::Vector3d, Eigen::Vector3d> next(double dt)
+    /**
+     * @brief Get the current true state as a 6D vector [x, y, z, vx, vy, vz].
+     * @return State vector.
+     */
+    StateVec next(double dt)
     {
         step(dt);
-        return {getPosition(), getVelocity()};
+        return getState();
+    }
+
+    /**
+     * @brief Get the current true state as a 6D vector [x, y, z, vx, vy, vz].
+     * @return State vector.
+     */
+    virtual StateVec getState() const
+    {
+        // Create a state vector from the current position and velocity
+        StateVec state;
+        state << getPosition()(0), getPosition()(1), getPosition()(2),
+                 getVelocity()(0), getVelocity()(1), getVelocity()(2);
+        return state;
     }
 
     /**
