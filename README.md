@@ -1,6 +1,12 @@
 # KF-Sim
 
-KF-Sim is a simulation project for Kalman Filter-based vehicle tracking and estimation. It provides a modular framework for simulating vehicles, sensors, and estimation algorithms, primarily using C++ and CMake.
+KF-Sim is a simulation project for Kalman Filter-based vehicle tracking and
+estimation. It provides a modular framework for simulating vehicles, sensors,
+and estimation algorithms, primarily using C++ and CMake.
+
+**Note:** Most of the work here in this project was done with AI assistance. I have
+basic idea of what a Kalman filter does and how it works.  This project is just
+something I did to explore creating an application. 
 
 ## Requirements
 - CMake (>= 3.15)
@@ -46,7 +52,6 @@ Running the simulation generates an "output.txt".
   ```sh
   ctest --test-dir build
   ```
-  *NOTE* Tests have not been written yet.
 
 ## Notes
 - For custom build presets, see `CMakePresets.json`.
