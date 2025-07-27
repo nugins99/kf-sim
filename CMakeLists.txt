@@ -27,11 +27,12 @@ set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 
-# Boost
-find_package(Boost REQUIRED COMPONENTS  Boost::program_options)
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options)
 
 # Source Dirs
 add_subdirectory(src/kf)
+add_subdirectory(test)
 
 # Packaging
 set(CPACK_SOURCE_GENERATOR "TGZ")
