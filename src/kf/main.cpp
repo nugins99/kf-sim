@@ -11,6 +11,7 @@
 #include "OutputFactory.h"
 #include "PositionDepthSensor.h"
 #include "SensorPreprocessor.h"
+#include "SensorPreprocessorInterface.h"
 #include "Types.h"  // Include the Types header for DOF, StateVec, StateMat
 #include "VehicleTruthModelFactory.h"
 
@@ -29,20 +30,27 @@ boost::property_tree::ptree readTreeFromFile(const std::string& filename)
     return pt;
 }
 
+std::unique_ptr<SensorPreprocessorInterface> createSensorPreprocessorFromConfig(
+    const boost::property_tree::ptree& pt)
+{
+    // For now, always return SensorPreprocessor. Extend here for other implementations.
+    return std::make_unique<SensorPreprocessor>(pt);
+}
+
 int main(int argc, char* argv[])
 {
-    std::string config_path = "../../config/truth_model.cfg";
+    std::string configPath = "../../config/truth_model.cfg";
     if (argc > 1)
     {
-        config_path = argv[1];
+        configPath = argv[1];
     }
-    auto pt = readTreeFromFile(config_path);
+    auto pt = readTreeFromFile(configPath);
 
     const double dt = pt.get<double>("sim.dt", 0.1);    // fallback to 0.1
     const int steps = pt.get<int>("sim.steps", 60000);  // fallback to 60000
 
     // Create truth model from ptree
-    std::unique_ptr<VehicleTruthModel> truth = createVehicleTruthModelFromConfig(pt);
+    auto truth = createVehicleTruthModelFromConfig(pt);
 
     // Initial state: match truth
     auto initialState = truth->getState();  // Use the truth model's getState method
@@ -55,16 +63,23 @@ int main(int argc, char* argv[])
     kf->init(initialState, initialCovariance);
 
     // Create sensors from config
-    SensorPreprocessor preprocessor(pt);
-    preprocessor.initialize(truth->getVelocity());  // Initialize with truth velocity
+    auto preprocessor = createSensorPreprocessorFromConfig(pt);
+    preprocessor->initialize(truth->getVelocity());  // Initialize with truth velocity
 
     auto output = createOutputFromConfig(pt, steps);
     for (int i = 0; i < steps; ++i)
     {
         auto truthState = truth->next(dt);
-        auto measurement = preprocessor.getMeasurement(truth.get(), dt, i, kf->getState());
         kf->predict();
-        kf->update(measurement);
+        auto measurement = preprocessor->getMeasurement(truth.get(), dt, i, kf->getState());
+        if (!measurement.hasNaN())
+        {
+            // Update the Kalman filter with the measurement
+            // If the measurement is invalid (e.g., NaN), skip the update
+            // This is a simple check; you might want to implement a more robust check
+            // based on your specific requirements.
+            kf->update(measurement);
+        }
         output->report(i, truthState, kf->getState(), kf->getCovariance());
     }
     return 0;

@@ -1,12 +1,15 @@
 #include "SensorPreprocessor.h"
 
 #include <boost/property_tree/ptree.hpp>
+#include <random>
 
-SensorPreprocessor::SensorPreprocessor(double imu_accel_noise, double imu_gyro_noise,
-                                       double pos_noise)
-    : m_imu(imu_accel_noise, imu_gyro_noise),
-      m_position(pos_noise),
-      m_integratedVel(Eigen::Vector3d::Zero())
+SensorPreprocessor::SensorPreprocessor(double imuAccelNoise, double imuGyroNoise,
+                                       double posNoise)
+    : m_imu(imuAccelNoise, imuGyroNoise),
+      m_position(posNoise),
+      m_integratedVel(Eigen::Vector3d::Zero()),
+      m_rng(std::random_device{}()),
+      m_dropoutDist(0.0, 1.0)
 {}
 
 SensorPreprocessor::SensorPreprocessor(const boost::property_tree::ptree& pt)
@@ -19,17 +22,26 @@ SensorPreprocessor::SensorPreprocessor(const boost::property_tree::ptree& pt)
                             pt.get<double>("sensor.imu_gyro_bias_y", 0.0),
                             pt.get<double>("sensor.imu_gyro_bias_z", 0.0))),
       m_position(pt),
-      m_integratedVel(Eigen::Vector3d::Zero())
+      m_integratedVel(Eigen::Vector3d::Zero()),
+      m_rng(std::random_device{}()),
+      m_dropoutDist(0.0, 1.0)
 {}
 
-void SensorPreprocessor::initialize(const Eigen::Vector3d& initial_vel)
+void SensorPreprocessor::initialize(const Eigen::Vector3d& initialVelocity)
 {
-    m_integratedVel = initial_vel;
+    m_integratedVel = initialVelocity;
 }
 
-StateVec SensorPreprocessor::getMeasurement(VehicleTruthModel* truth, double dt,
-                                                                int step, const StateVec& kf_est)
+StateVec SensorPreprocessor::getMeasurement(VehicleTruthModel* truth, double dt, int step,
+                                            const StateVec& estimate)
 {
+    // Simulate 5% dropout
+    if (m_dropoutDist(m_rng) < 0.3)
+    {
+        // Return invalid measurement (all NaNs)
+        return StateVec::Constant(std::numeric_limits<double>::quiet_NaN());
+    }
+
     // Simulate IMU measurement
     Eigen::Matrix<double, 6, 1> imu_meas = m_imu.measure(truth, dt);
     Eigen::Vector3d accel = imu_meas.head<3>();
@@ -39,31 +51,31 @@ StateVec SensorPreprocessor::getMeasurement(VehicleTruthModel* truth, double dt,
     }
     else
     {
-        updateState(kf_est);
+        updateState(estimate);
     }
     m_integratedVel += accel * dt;
 
     // Simulate position measurement every 10 steps
-    Eigen::Vector3d pos_meas(0, 0, 0);
+    Eigen::Vector3d posMeas(0, 0, 0);
     bool use_pos = (step % 10 == 0);
     if (use_pos)
     {
-        pos_meas = m_position.measure(truth);
+        posMeas = m_position.measure(truth);
     }
     else
     {
-        pos_meas = kf_est.head<3>();
+        posMeas = estimate.head<3>();
     }
 
     StateVec measurement;
-    measurement << pos_meas(0), pos_meas(1), pos_meas(2), m_integratedVel(0), m_integratedVel(1),
+    measurement << posMeas(0), posMeas(1), posMeas(2), m_integratedVel(0), m_integratedVel(1),
         m_integratedVel(2);
     return measurement;
 }
 
-void SensorPreprocessor::updateState(const StateVec& kf_state)
+void SensorPreprocessor::updateState(const StateVec& state)
 {
-    m_integratedVel = kf_state.segment<3>(3);
+    m_integratedVel = state.segment<3>(3);
 }
 
 const Eigen::Vector3d& SensorPreprocessor::getIntegratedVel() const { return m_integratedVel; }
