@@ -17,8 +17,9 @@ class IMUSensor6D
      * @param gyro_noise_std Standard deviation of simulated gyroscope noise (wx, wy, wz).
      *        Higher values increase the randomness in the angular velocity measurements.
      *
-     * These parameters control the amount of Gaussian noise added to the true acceleration and angular velocity
-     * values reported by the sensor. This simulates real-world sensor imperfections and uncertainty.
+     * These parameters control the amount of Gaussian noise added to the true acceleration and
+     * angular velocity values reported by the sensor. This simulates real-world sensor
+     * imperfections and uncertainty.
      */
     IMUSensor6D(double accel_noise_std, double gyro_noise_std);
 
@@ -29,9 +30,8 @@ class IMUSensor6D
      * @param accel_bias 3D bias vector added to acceleration measurements.
      * @param gyro_bias 3D bias vector added to angular velocity measurements.
      */
-    IMUSensor6D(double accel_noise_std, double gyro_noise_std,
-               const Eigen::Vector3d& accel_bias,
-               const Eigen::Vector3d& gyro_bias);
+    IMUSensor6D(double accel_noise_std, double gyro_noise_std, const Eigen::Vector3d& accel_bias,
+                const Eigen::Vector3d& gyro_bias);
 
     /**
      * @brief Simulate a measurement from the IMU using the truth model.

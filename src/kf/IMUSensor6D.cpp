@@ -12,8 +12,7 @@ IMUSensor6D::IMUSensor6D(double accel_noise_std, double gyro_noise_std)
 {}
 
 IMUSensor6D::IMUSensor6D(double accel_noise_std, double gyro_noise_std,
-                         const Eigen::Vector3d& accel_bias,
-                         const Eigen::Vector3d& gyro_bias)
+                         const Eigen::Vector3d& accel_bias, const Eigen::Vector3d& gyro_bias)
     : gen_(rd_()),
       accel_noise_(0.0, accel_noise_std),
       gyro_noise_(0.0, gyro_noise_std),
