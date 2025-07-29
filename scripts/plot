@@ -1,6 +1,6 @@
 #!/usr/bin/env gnuplot
 
-set multiplot layout 3,2 title "Kalman Filter Simulation"
+set multiplot layout 4,2 title "Kalman Filter Simulation"
 
 # True vs Estimated Position (x, y)
 set title "True vs Estimated Position (XY)"
@@ -34,17 +34,36 @@ plot \
     "output.txt" using 1:9 with lines title "True Heading", \
     "output.txt" using 1:17 with lines title "Estimated Heading"
 
-# Range Measurements (only when measured)
-set title "Range Measurements"
-set xlabel "Step"
-set ylabel "Range (ft)"
-plot "output.txt" using 1:17:(($21==1)?$17:1/0) with points title "Range (measured)"
-
 # Position Error over time
 set title "Position Error Over Time"
 set xlabel "Step"
 set ylabel "Error (ft)"
-plot "output.txt" using 1:21 with lines title "Position Error"
+plot "output.txt" using 1:18 with lines title "Position Error"
+
+# Velocity Error over time
+set title "Velocity Error Over Time"
+set xlabel "Step"
+set ylabel "Error (ft/s)"
+plot "output.txt" using 1:19 with lines title "Position Error"
+
+
+# Position Error Estimate (Standard Deviation)
+set title "Position Error Estimate (Std Dev)"
+set xlabel "Step"
+set ylabel "Std Dev (ft)"
+plot \
+    "output.txt" using 1:20 with lines title "Std Dev X", \
+    "output.txt" using 1:21 with lines title "Std Dev Y", \
+    "output.txt" using 1:22 with lines title "Std Dev Z"
+
+# Velocity Error Estimate (Standard Deviation)
+set title "Velocity Error Estimate (Std Dev)"
+set xlabel "Step"
+set ylabel "Std Dev (ft/s)"
+plot \
+    "output.txt" using 1:23 with lines title "Std Dev Vx", \
+    "output.txt" using 1:24 with lines title "Std Dev Vy", \
+    "output.txt" using 1:25 with lines title "Std Dev Vz"
 
 unset multiplot
 pause -1
