@@ -10,7 +10,8 @@ class CircleVehicle : public VehicleTruthModel
 {
    public:
     CircleVehicle(double radius, double speed, double depth,
-                  const Eigen::Vector3d& center = Eigen::Vector3d::Zero());
+                  const Eigen::Vector3d& center = Eigen::Vector3d::Zero(),
+                  double currentSpeed = 0.1, double currentDirection = 0.0);
     void step(double dt) override;
     Eigen::Vector3d getPosition() const override;
     Eigen::Vector3d getVelocity() const override;
@@ -18,6 +19,12 @@ class CircleVehicle : public VehicleTruthModel
     Eigen::Vector3d getAngularVelocity() const override;
 
    private:
-    double m_radius, m_speed, m_theta, m_depth;
+    double m_radius;
+    double m_speed;
+    double m_theta;
+    double m_depth;
     Eigen::Vector3d m_center;
+    double m_currentSpeed;      // Ocean current speed (ft/sec)
+    double m_currentDirection;  // Ocean current direction (radians, 0=east)
+    Eigen::Vector3d m_currentDrift; // Accumulated drift due to ocean current
 };
